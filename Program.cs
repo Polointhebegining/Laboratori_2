@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,60 +25,122 @@ namespace Lab2
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Введите номер команды:");
-            Console.WriteLine("1 - добавление новой задачи");
-            Console.WriteLine("2 - поиск задач по тэгам");
-            Console.WriteLine("3 - выход");
-            Console.WriteLine("4 - удаление");
+            
 
-            int comanda;
+            int comanda = 0;
             string NameTag = "";
-            comanda = Convert.ToInt16(Console.Read());
+           
             TodoList todoList = new TodoList();
-            var task = new TodoTask();
+           
 
-            //1.добавление новой задачи
-            if (comanda == 1)
+
+            while (comanda != 3)
             {
-                Console.WriteLine("Введите тэг");
+                Console.WriteLine("Введите номер команды:");
+                Console.WriteLine("1 - добавление новой задачи");
+                Console.WriteLine("2 - поиск задач по тэгам");
+                Console.WriteLine("3 - выход из программы");
+                Console.WriteLine("4 - удаление");
 
-                NameTag = Convert.ToString(Console.Read());
-                task.AddTag(NameTag);
-                todoList.Add(task);
-
-                Console.WriteLine("Тэг добавлен");
-            }
-
-            //2.поиск задач по тэгам вывод N наиболее актуальных задач
-            if (comanda == 2)
-            {
-                Console.WriteLine("Введите тэги, по которым будет выполнен поиск");
-                Console.WriteLine("Чтобы закончить ввод - введите пустую строку");
-
-                NameTag = Convert.ToString(Console.Read());
-                //Ввод тэгов продолжается до тех пор, пока пользователь не введёт пустую строку.
-                while (NameTag != "")
+                comanda = Convert.ToInt32(Console.ReadLine());
+                //1.добавление новой задачи
+                if (comanda == 1)
                 {
-                    task.HasTag(NameTag);
-                    NameTag = Convert.ToString(Console.Read());
+                    var task = new TodoTask();
+                    Console.WriteLine("Введите название задачи");
+                    string TaskName = Console.ReadLine();
+                    task.Title = TaskName;
+
+                    Console.WriteLine("Введите описание задачи");
+                    string TaskDescription = Console.ReadLine();
+                    task.Description = TaskDescription;
+
+                    Console.WriteLine("Введите дедлайн");
+                    String deadLine = Console.ReadLine();
+                    DateTime DDLine = DateTime.Parse(deadLine);
+                    task.Deadline = DDLine;
+
+                    Console.WriteLine("Введите тэги");
+                    Console.WriteLine("(вывод прекратиться, когда вы введете пустую строку)");
+                    NameTag = " ";
+                    while(NameTag != "")
+                    {
+                        NameTag = Console.ReadLine();
+                        task.AddTag(NameTag);
+                        todoList.Add(task);
+                    }
+                    
+                    task.IsCompleted = false;
                 }
-            }
 
-            //3.выход.
-            if (comanda == 3)
-            {
-                Console.WriteLine("выход");
-                throw new NotImplementedException("");
-            }
+                //2.поиск задач по тэгам вывод N наиболее актуальных задач
+                if (comanda == 2)
+                {
+                    Console.WriteLine("Введите тэги, по которым будет выполнен поиск");
+                    Console.WriteLine("Чтобы закончить ввод - введите пустую строку");
 
-            //4.удаление тэга 
-            if (comanda == 4)
-            {
-                Console.WriteLine("введите тэг");
-                NameTag = Convert.ToString(Console.Read());
-                task.RemoveTag(NameTag);
-                Console.WriteLine("тэг удален");
-            }
+                    NameTag = Convert.ToString(Console.ReadLine());
+                    //Ввод тэгов продолжается до тех пор, пока пользователь не введёт пустую строку.
+                    while (NameTag != "")
+                    {
+                        //task.HasTag(NameTag);
+                        
+                        var searchResults = todoList.Search(NameTag);
+                        if (searchResults.Count() == 0)
+                        {
+                            Console.WriteLine("Задач с заданным тегом нет");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Это все задания по Вашему запросу");
+                            foreach (var result in searchResults)
+                            {
+                                Console.WriteLine(result);
+                            }
+                        }
+                        
+                        
+                        NameTag = Convert.ToString(Console.ReadLine());
+                    }
+                }
+
+                //3.выход.
+                if (comanda == 3)
+                {
+                    Environment.Exit(0);
+                }
+
+                //4.удаление тэга 
+                if (comanda == 4)
+                {
+                    Console.WriteLine("введите тэг");
+                    NameTag = Convert.ToString(Console.ReadLine());
+                    
+
+                    while (NameTag != "")
+                    {
+                        var searchResults = todoList.Search(NameTag);
+                        if (searchResults.Count() == 0)
+                        {
+                            Console.WriteLine("Задач с заданным тегом нет");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Это все задания по Вашему запросу");
+                            foreach (var result in searchResults)
+                            {
+                                result.RemoveTag(NameTag);
+                                Console.WriteLine("тэг удален");
+                            }
+                        }
+
+                        NameTag = Convert.ToString(Console.ReadLine());
+                    }
+
+                    
+                }
+
+            }            
         }
     }
 }
