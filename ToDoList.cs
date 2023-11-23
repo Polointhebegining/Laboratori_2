@@ -60,16 +60,6 @@ namespace Lab2
 
         public IEnumerable<TodoTask> Search(string tag)
         {
-            //TodoTask list = new TodoTask();
-            //List <string> tagi = list.Tags;
-            //for (int i = 1; i <= tagi.Count(); i++)
-            //{
-            //    if (tagi[i] == tags) { 
-            //        return list; 
-            //    }
-            //}
-            //return null;
-
             var result = new List<TodoTask>();
 
             foreach (var task in tasks)
