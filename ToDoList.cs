@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,9 +58,30 @@ namespace Lab2
             tasks.Remove(task);
         }
 
-        public IEnumerable<TodoTask> Search(params string[] tags)
+        public IEnumerable<TodoTask> Search(string tag)
         {
-            throw new NotImplementedException("");
+            //TodoTask list = new TodoTask();
+            //List <string> tagi = list.Tags;
+            //for (int i = 1; i <= tagi.Count(); i++)
+            //{
+            //    if (tagi[i] == tags) { 
+            //        return list; 
+            //    }
+            //}
+            //return null;
+
+            var result = new List<TodoTask>();
+
+            foreach (var task in tasks)
+            {
+                if (task.Tags.Contains(tag))
+                {
+                    result.Add(task);
+                    continue;
+                }
+            }
+
+            return result;
         }
     }
 
